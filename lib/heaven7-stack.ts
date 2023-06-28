@@ -39,6 +39,7 @@ export class Heaven7Stack extends cdk.Stack {
 
     const securityGroup = new SecurityGroup(this, "sg", { vpc, allowAllOutbound: true });
     const trustedIps = this.node.tryGetContext("heaven7/trusted-ips") as Array<String>;
+    const ingressPorts = this.node.tryGetContext("heaven7/ingress-ports") as Array<number>;
     trustedIps.forEach((trustedIp) => {
       securityGroup.addIngressRule(Peer.ipv4(`${trustedIp}/32`), Port.tcp(22), `Heaven7: Allow SSH from ${trustedIp}`);
       securityGroup.addIngressRule(
@@ -46,10 +47,8 @@ export class Heaven7Stack extends cdk.Stack {
         Port.udpRange(60000, 61000),
         `Heaven7: Allow Mosh from ${trustedIp}`
       );
-      securityGroup.addIngressRule(
-        Peer.ipv4(`${trustedIp}/32`),
-        Port.tcp(3000),
-        `Heaven7: Allow connecting to Rails server from ${trustedIp}`
+      ingressPorts.forEach((ingressPort) =>
+        securityGroup.addIngressRule(Peer.ipv4(`${trustedIp}/32`), Port.tcp(ingressPort))
       );
     });
 
