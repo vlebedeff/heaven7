@@ -7,7 +7,11 @@
 
 ## Deploy
 
-`cdk deploy -O outputs.json`
+`./run deploy`
+
+## Connect
+
+`./run connect`
 
 ## Other useful commands
 
