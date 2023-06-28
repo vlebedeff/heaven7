@@ -1,0 +1,30 @@
+#!/bin/bash -e
+
+function task:deploy {
+  cdk deploy -O outputs.json
+}
+
+function instance_id {
+  jq -r '.[] | .InstanceID' outputs.json
+}
+
+function instance_ip {
+  jq -r '.[] | .InstanceIP' outputs.json
+}
+
+function task:start {
+  aws ec2 start-instances --instance-ids "$(instance_id)" --output text
+  aws ec2 wait instance-running --instance-ids "$(instance_id)" --output text
+}
+
+function task:stop {
+  aws ec2 stop-instances --instance-ids "$(instance_id)" --output text
+  aws ec2 wait instance-stopped --instance-ids "$(instance_id)" --output text
+}
+
+function task:connect {
+  task:start
+  mosh ubuntu@$(instance_ip)
+}
+
+"task:$@"
