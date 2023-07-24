@@ -40,6 +40,7 @@ export class Heaven7Stack extends cdk.Stack {
     const securityGroup = new SecurityGroup(this, "sg", { vpc, allowAllOutbound: true });
     const trustedIps = this.node.tryGetContext("heaven7/trusted-ips") as Array<String>;
     const ingressPorts = this.node.tryGetContext("heaven7/ingress-ports") as Array<number>;
+    securityGroup.addIngressRule(Peer.ipv4(`0.0.0.0/0`), Port.tcp(22), `Heaven7: Allow SSH from everywhere`); // Let Cloud9 in
     trustedIps.forEach((trustedIp) => {
       securityGroup.addIngressRule(Peer.ipv4(`${trustedIp}/32`), Port.tcp(22), `Heaven7: Allow SSH from ${trustedIp}`);
       securityGroup.addIngressRule(
