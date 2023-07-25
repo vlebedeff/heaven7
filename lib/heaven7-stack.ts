@@ -14,6 +14,8 @@ import {
   UserData,
   CfnEIP,
   MachineImage,
+  BlockDeviceVolume,
+  BlockDevice,
 } from "aws-cdk-lib/aws-ec2";
 import { Construct } from "constructs";
 import { readFileSync } from "fs";
@@ -55,6 +57,10 @@ export class Heaven7Stack extends cdk.Stack {
 
     const userData = readFileSync("./lib/user-data.sh", "utf8");
     const keyName = this.node.tryGetContext("heaven7/key-name");
+    const rootVolume: BlockDevice = {
+      deviceName: "/dev/sda1",
+      volume: BlockDeviceVolume.ebs(128),
+    };
     const instance = new Instance(this, "instance", {
       vpc,
       vpcSubnets: { subnetType: SubnetType.PUBLIC },
@@ -66,6 +72,7 @@ export class Heaven7Stack extends cdk.Stack {
       }),
       keyName,
       userData: UserData.custom(userData),
+      blockDevices: [rootVolume],
     });
 
     const eip = new CfnEIP(this, "eip", {

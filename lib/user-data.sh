@@ -10,4 +10,4 @@ LC_ALL=en_US.UTF-8
 LANG=en_US.UTF-8
 EOF
 
-apt-get install -y mosh neofetch
+apt-get install -y mosh neofetch python-pip
