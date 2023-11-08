@@ -65,7 +65,7 @@ export class Heaven7Stack extends cdk.Stack {
       vpc,
       vpcSubnets: { subnetType: SubnetType.PUBLIC },
       securityGroup,
-      instanceType: InstanceType.of(InstanceClass.C6I, InstanceSize.XLARGE2),
+      instanceType: InstanceType.of("c7i" as InstanceClass, InstanceSize.XLARGE2),
       machineImage: MachineImage.genericLinux({
         "eu-central-1": "ami-084872984773e3cde",
         "us-east-2": "ami-024e6efaf93d85776",
