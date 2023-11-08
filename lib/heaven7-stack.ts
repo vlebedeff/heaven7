@@ -59,7 +59,7 @@ export class Heaven7Stack extends cdk.Stack {
     const keyName = this.node.tryGetContext("heaven7/key-name");
     const rootVolume: BlockDevice = {
       deviceName: "/dev/sda1",
-      volume: BlockDeviceVolume.ebs(128),
+      volume: BlockDeviceVolume.ebs(512),
     };
     const instance = new Instance(this, "instance", {
       vpc,
